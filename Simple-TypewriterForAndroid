@@ -1,0 +1,46 @@
+package com.example.typewriter;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.widget.TextView;
+
+public class MainActivity extends Activity {
+
+	TextView tv;
+	String str = "some words !!!";
+	int i = 0;
+	Timer timer = new Timer();
+	
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			tv.append(msg.obj.toString());
+		};
+	};
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		tv = (TextView) findViewById(R.id.tv);
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				Message msg = new Message();
+				char[] c = str.toCharArray();
+				msg.obj = c[i];
+				handler.sendMessage(msg);
+				if (i < c.length - 1) {
+					++i;
+				} else {
+					this.cancel();
+				}
+			}
+		}, 0, 1000);
+	}
+}
